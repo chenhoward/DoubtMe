@@ -12,15 +12,11 @@ div
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary {
-    background-color: #23C2B5
+    background-color: #38A1CF
 }
 .btn-group {
   padding-bottom:10px;
 }
-.navbar {
-  padding-bottom:10px;
-}
-
 .feed-panel{
   width: 90%;
   margin: 0 auto;
