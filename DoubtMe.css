@@ -7,6 +7,13 @@ div
   overflow-x:hidden;
   font-family: 'Oswald', serif;
 }
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary {
+    background-color: #23C2B5
+}
 .btn-group {
   padding-bottom:10px;
 }
