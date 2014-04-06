@@ -3,6 +3,13 @@
 </head>
 
 <body>
+  {{> login}}
+</body>
+
+<template name="login">
+  <h1>Hello World!</h1>
+  {{greeting}}
+  <h1>Login</h1>
   <form id="login-form" action="action">
       <div>
         <input type="email" id="login-email" />
@@ -10,11 +17,5 @@
         <input type="submit" id="login-button" value="Sign in" />
      </div>
    </form>
-  {{> hello}}
-</body>
-
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
   <input type="button" value="Click" />
 </template>
