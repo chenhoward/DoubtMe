@@ -45,9 +45,10 @@
 <template name="feed">
   {{#if showCreateDialog}}
     {{> createDialog}}
-  {{/if}}
+
   <a class="btn add_task">Add task</a>
   <a class="btn logout">Logout</a>  
+  {{/if}}
   {{#each goals}}
     {{> goal}}
   {{/each}}
