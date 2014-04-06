@@ -2,6 +2,27 @@
 .center {
   text-align: center;
 }
+.vs-bar{
+  position: relative;
+  background-color:  #38A1CF;
+  height: 20px;
+  width: 100%;
+}
+
+.left-vs{
+  position: absolute;
+  background-color: orange;
+  height:20px;
+  width: 75%;
+  top: 0px;
+  left: 0px;
+}
+.haters {
+  line-height: 75px;
+  height: auto;
+  font-size: 75px;
+  overflow: hidden;
+}
 div
 {
   overflow-x:hidden;

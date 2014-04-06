@@ -163,7 +163,13 @@ if (Meteor.isClient) {
   Template.goal.showPayButtons = function() {
     return Meteor.user()._id == this.goal_owner;
   };
-
+  Template.goal.winning = function() {
+    var two = Doubters.find({goal_id: this._id}).fetch()[0].believe2.length;
+    var one = Doubters.find({goal_id: this._id}).fetch()[0].believe1.length;
+    if (one == 0 && two == 0) return 50;
+    var percent = (((one*1.0) / (one+two))*100).toFixed(0);
+    return percent; 
+  };
   Template.goal.showCompPayButtons = function(){
     return (Meteor.user()._id == this.person1 || Meteor.user()._id == this.person2);
   };
