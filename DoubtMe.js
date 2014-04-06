@@ -59,6 +59,33 @@ if (Meteor.isClient) {
       });
       return false;
     },
+    'submit #login-form2' : function(e, t){
+      e.preventDefault();
+      // retrieve the input field values
+      var email = t.find('#login-email2').value
+        , password = t.find('#login-password2').value;
+      console.log("call");
+      var email = trimInput(email);
+
+      // Trim and validate your fields here....
+
+      // If validation passes, supply the appropriate fields to the
+      // Meteor.loginWithPassword() function.
+      Meteor.loginWithPassword(email, password, function(err){
+        if (err) {
+          Session.set("errorMessage", "Login Failed");
+          console.log("Error");
+        }
+        // The user might not have been found, or their passwword
+        // could be incorrect. Inform the user that their
+        // login attempt has failed.
+        else {
+          console.log("Success");
+        }
+        // The user has been logged in.
+      });
+      return false;
+    },
 
     'click input': function () {
       // template data, if any, is available in 'this'
@@ -343,7 +370,36 @@ if (Meteor.isClient) {
           console.log("fail");
           return false;
         }
-    }
+    },
+    'submit #register-form2' : function(e, t) {
+      e.preventDefault();
+      var email = t.find('#account-email2').value
+        , password = t.find('#account-password2').value;
+
+      // Trim and validate the input
+        email = trimInput(email);
+
+        if (isValidPassword(password)) {
+          Accounts.createUser({email: email, password : password}, function(err){
+            if (err) {
+              console.log("reg")
+              // Inform the user that account creation failed
+            } else {
+              console.log("reg");
+              // Success. Account has been created and the user
+              // has logged in successfully.
+            }
+
+          });
+
+          return false;
+        } else {
+          Session.set('errorMessage', 'Password is too short')
+          return false; 
+          console.log("fail");
+          return false;
+        }
+    },
 
   });
   Deps.autorun(function() {
