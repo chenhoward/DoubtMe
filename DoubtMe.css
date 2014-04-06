@@ -63,7 +63,7 @@ body {
   background-color: gray;
 }
 
-.well, .navbar-inner, .popover, .btn, .tooltip, input, select, textarea, pre, .progress, .modal, .add-on, .alert, .table-bordered, .nav>.active>a, .dropdown-menu, .tooltip-inner, .badge, .label, .img-polaroid {
+.well, .navbar-inner, .popover, .btn, .tooltip, select, textarea, pre, .progress, .modal, .add-on, .alert, .table-bordered, .nav>.active>a, .dropdown-menu, .tooltip-inner, .badge, .label, .img-polaroid {
   -moz-box-shadow: none !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -73,3 +73,8 @@ body {
   border-collapse: collapse !important;
   background-image: none !important;
 }
+.form-inline > * {
+   margin:5px 3px;
+   margin-bottom:5px;
+   margin-top: 5px;
+ }

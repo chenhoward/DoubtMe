@@ -53,10 +53,21 @@
 
 <template name="login">
 <h1>Login</h1>
-<form id="login-form" class="form-inline" >
+<form id="login-form" class="form-inline hidden-phone" >
   <div>
     <input type="email" id="login-email" placeholder="Email"/>
     <input type="password" id="login-password" placeholder="Password"/>
+  </div>
+  <div class="center">
+    <button type="submit" class="btn btn-primary">Sign in</button>
+  </div>
+</form>
+<form id="login-form2" class="form-inline visible-phone" >
+  <div class="control-group">
+    <input type="email" id="login-email2" placeholder="Email"/>
+    </div>
+    <div class="control-group">
+    <input type="password" id="login-password2" placeholder="Password"/>
   </div>
   <div class="center">
     <button type="submit" class="btn btn-primary">Sign in</button>
@@ -241,10 +252,21 @@
 
 <template name="register">
 <h1>Register</h1>
-<form id="register-form" class="form-inline">
+<form id="register-form" class="form-inline hidden-phone">
   <div>
-    <input type="email" id="account-email" placeholder="Email"/>
+    <input class="controls" type="email" id="account-email" placeholder="Email"/>
     <input type="password" id="account-password" placeholder="Password" />
+  </div>
+  <div class="center">
+    <button type="submit" class="btn btn-primary">Register</button>
+  </div>
+</form>
+<form id="register-form2" class="form-inline visible-phone">
+  <div class="control-group">
+    <input class="controls" type="email" id="account-email2" placeholder="Email"/>
+    </div>
+    <div class="control-group">
+    <input type="password" id="account-password2" placeholder="Password" />
   </div>
   <div class="center">
     <button type="submit" class="btn btn-primary">Register</button>
