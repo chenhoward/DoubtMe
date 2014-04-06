@@ -1,7 +1,7 @@
 if (Meteor.isClient) {
 
   /* Events */
-  Template.login.greeting = function () {
+  Template.feed.greeting = function () {
     if (Meteor.user())
       return Meteor.user().emails[0].address + " " + Meteor.user().points;
   };
@@ -38,11 +38,22 @@ if (Meteor.isClient) {
         // The user has been logged in.
       });
       return false; 
+    }, 
+
+    'click input': function () {
+      // template data, if any, is available in 'this'
+      if (typeof console !== 'undefined')
+        console.log("You pressed the button");
     }
   });
   Template.feed.events({
     'click .add_task': function() {
       Session.set("showCreateDialog", true);
+    },
+
+    'click .logout': function() {
+      console.log("logout");
+      Meteor.logout();
     },
   });
   /* Create Goal Method */

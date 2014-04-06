@@ -12,7 +12,7 @@
       <li><a href="#">Link</a></li>
     </ul>
   </div>
-      <p class="navbar-text">Logged in as</p> 
+      <p class="navbar-text">Logged in as</p>
     </div>
     {{> forms}}
   {{> feed}}
@@ -25,7 +25,6 @@
   {{/if}}
 </template>
 <template name="login">
-  {{greeting}}
   <h1>Login</h1>
   <form id="login-form" action="action">
       <div>
@@ -38,10 +37,14 @@
 </template>
 
 <template name="feed">
+
+  {{greeting}}
   {{#if showCreateDialog}}
     {{> createDialog}}
   {{/if}}
   <a class="btn add_task">Add task</a>  
+
+  <a class="btn logout">Logout</a>  
   {{#each goals}}
     {{> goal}}
   {{/each}}
