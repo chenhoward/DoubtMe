@@ -132,7 +132,7 @@ if (Meteor.isClient) {
           title: title,
           description: description,
           points_per_person: points_per_person,
-          creator: Meteor.user() ? Meteor.user().emails[0].address : 'Stranger'
+          creator: Meteor.user() ? Meteor.user().emails[0].address.split("@")[0] : 'Stranger'
         });
         Session.set("showCreateDialog",false);
       } else {
@@ -338,8 +338,8 @@ if (Meteor.isClient) {
 
           return false;
         } else {
-                 Session.set('errorMessage', 'Password is too short')
-                 return false; 
+          Session.set('errorMessage', 'Password is too short')
+          return false; 
           console.log("fail");
           return false;
         }

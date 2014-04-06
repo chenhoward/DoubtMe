@@ -5,14 +5,18 @@
 div
 {
   overflow-x:hidden;
+  font-family: 'Oswald', serif;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary {
+    background-color: #38A1CF
 }
 .btn-group {
   padding-bottom:10px;
 }
-.navbar {
-  padding-bottom:10px;
-}
-
 .feed-panel{
   width: 90%;
   margin: 0 auto;

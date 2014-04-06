@@ -1,4 +1,6 @@
 <head>
+  <link href="//fonts.googleapis.com/css?family=Oswald:300,400,700" rel="stylesheet" type="text/css">
+
   <title>DoubtMe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
@@ -6,12 +8,12 @@
 <body>
   {{> nav}}
   <div class ="row-fluid">
-      {{> forms}}
-      {{> feed}}
+    {{> forms}}
+    {{> feed}}
   </div>
 </body>
 <template name = "nav">
-<div class="navbar navbar-static-top navbar-inverse">
+<div class="navbar navbar-static-top">
   <div class="navbar-inner">
     <a class="brand" href="#">DoubtMe</a>
     <ul class="nav pull-right hidden-phone">
@@ -30,13 +32,13 @@
 
 <template  name = "forms">
 <div class = "center">
-{{#if showForms}}
-{{>login}}
-{{>register}}
-{{#if showErrMessage}}
-{{>err}}
-{{/if}}
-{{/if}}
+  {{#if showForms}}
+  {{>login}}
+  {{>register}}
+  {{#if showErrMessage}}
+  {{>err}}
+  {{/if}}
+  {{/if}}
 </div>
 </template>
 
@@ -46,18 +48,18 @@
     <button type="button" class="close cancel">&times;</button>
     <h3>{{errMessage}}</h3>
   </div>
-  </div>
+</div>
 </template>
 
 <template name="login">
 <h1>Login</h1>
 <form id="login-form" class="form-inline" >
   <div>
-    <input type="email" id="login-email" />
-    <input type="password" id="login-password" />
+    <input type="email" id="login-email" placeholder="Email"/>
+    <input type="password" id="login-password" placeholder="Password"/>
   </div>
   <div class="center">
-    <button type="submit" class="btn">Sign in</button>
+    <button type="submit" class="btn btn-primary">Sign in</button>
   </div>
 </form>
 </template>
@@ -65,22 +67,22 @@
 <template name="feed">
 <div class = "center">
   {{#if showButtons}}
-    {{#if showCreateDialog}}
-      {{> createDialog}}
-    {{/if}}
-    {{#if showLeaderboardModal}}
-      {{> showLeaderboard}}
-    {{/if}}
-      <a class="btn btn-primary show_leaderboard"> Leaderboard</a>
-    {{#if showChallengeCreate}}
-      {{> challengeCreate}}
-    {{/if}}
-    <a class="btn btn-primary add_goal">Add Goal</a>
-    <a class="btn  btn-primary logout">Logout</a>
+  {{#if showCreateDialog}}
+  {{> createDialog}}
+  {{/if}}
+  {{#if showLeaderboardModal}}
+  {{> showLeaderboard}}
+  {{/if}}
+  <a class="btn btn-primary show_leaderboard"> Leaderboard</a>
+  {{#if showChallengeCreate}}
+  {{> challengeCreate}}
+  {{/if}}
+  <a class="btn btn-primary add_goal">Add Goal</a>
+  <a class="btn  btn-primary logout">Logout</a>
   {{/if}}
   <div class ="feed-panel">
     {{#each goals}}
-      {{> goal}}
+    {{> goal}}
     {{/each}}
   </div>
 </div>
@@ -90,60 +92,60 @@
 <template name="goal">
 <div class="goal well well-small">
   {{#if competition}}
-    <div class = "row-fluid center">
-      <div class = "span4">
-        <h2>{{email_1}}</h2>
-        <h6>Believers: {{believers1}}</h6>
-      </div>
-      <div class ="span4">
-        <h1>VERSUS</h1> 
-      </div>
-      <div class ="span4">
-        <h2>{{email_2}}</h2>
-        <h6>Believers: {{believers1}}</h6>
-      </div>
+  <div class = "row-fluid center">
+    <div class = "span4">
+      <h2>{{email_1}}</h2>
+      <h6>Believers: {{believers1}}</h6>
     </div>
-    <br/>
-    <div class = "row-fluid center">
-      <h3> {{title}} </h3>
-      Description: {{description}}
-      <h5> Points for Correctness: {{points_per_person}}</h5>
+    <div class ="span4">
+      <h1>VERSUS</h1> 
     </div>
-    <div class = "row-fluid center">
+    <div class ="span4">
+      <h2>{{email_2}}</h2>
+      <h6>Believers: {{believers1}}</h6>
+    </div>
+  </div>
+  <br/>
+  <div class = "row-fluid center">
+    <h3> {{title}} </h3>
+    Description: {{description}}
+    <h5> Points for Correctness: {{points_per_person}}</h5>
+  </div>
+  <div class = "row-fluid center">
     {{#if showCompPayButtons}}
-      <div class = "span4">
-        <a class="btn btn-primary play1"> {{email_1}} Won!</a>
-      </div>
-      <div class = "span4 offset4">
-        <a class="btn btn-primary play2"> {{email_2}} Won!</a>
-      </div>
+    <div class = "span4">
+      <a class="btn btn-primary play1"> {{email_1}} Won!</a>
+    </div>
+    <div class = "span4 offset4">
+      <a class="btn btn-primary play2"> {{email_2}} Won!</a>
+    </div>
     {{else}}
-      <div class = "span4">
-        <a class="btn btn-primary believe1"> Bet on {{email_1}}</a>
-      </div>
-      <div class = "span4 offset4">
-       <a class="btn btn-primary believe2"> Bet on {{email_2}}</a>
-      </div>
+    <div class = "span4">
+      <a class="btn btn-primary believe1"> Bet on {{email_1}}</a>
+    </div>
+    <div class = "span4 offset4">
+      <a class="btn btn-primary believe2"> Bet on {{email_2}}</a>
+    </div>
     {{/if}}
-    </div>
+  </div>
   {{else}}
-    <div class="row-fluid center">
-     <h2 >Owner: {{creator}}</h2>
-      <h3>
-        {{title}}
-      </h3>
-      <p>{{description}}</p>
-      <h5>
-        Points for Doubting: {{points_per_person}}
-      </h5>
-       {{#if showPayButtons}}
-      <a class="btn btn-primary success">!@#$ the haters</a>
-      <a class="btn btn-primary failure">):</a>
-      {{ else }}
-      <a class="btn btn-primary doubt">Doubt This</a>
-      {{/if}}
-      Haters: {{goal_doubters.length}}
-    </div>
+  <div class="row-fluid center">
+    <h2 >{{creator}}</h2>
+    <h3>
+      {{title}}
+    </h3>
+    <p>{{description}}</p>
+    <h5>
+      Points for Doubting: {{points_per_person}}
+    </h5>
+    {{#if showPayButtons}}
+    <a class="btn btn-primary success">!@#$ the haters</a>
+    <a class="btn btn-primary failure">):</a>
+    {{ else }}
+    <a class="btn btn-primary doubt">Doubt This</a>
+    {{/if}}
+    Haters: {{goal_doubters.length}}
+  </div>
   {{/if}}
 </div>
 </template>
@@ -234,11 +236,11 @@
 <h1>Register</h1>
 <form id="register-form" class="form-inline">
   <div>
-    <input type="email" id="account-email" />
-    <input type="password" id="account-password" />
+    <input type="email" id="account-email" placeholder="Email"/>
+    <input type="password" id="account-password" placeholder="Password" />
   </div>
   <div class="center">
-    <button type="submit" class="btn">Register</button>
+    <button type="submit" class="btn btn-primary">Register</button>
   </div>
 </form>
 </template>
