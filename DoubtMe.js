@@ -45,6 +45,78 @@ if (Meteor.isClient) {
         console.log("You pressed the button");
     }
   });
+  Template.feed.events({
+    'click .add_task': function() {
+      Session.set("showCreateDialog", true);
+    },
+  });
+  /* Create Goal Method */
+  Template.createDialog.events({
+    'click .save': function (event, template) {
+      var title = template.find(".title").value;
+      var description = template.find(".description").value;
+      var points_per_person = template.find(".points_per_person").value;
+      if (title.length && description.length && points_per_person) {
+        Meteor.call('createGoal', {
+          title: title,
+          description: description,
+          points_per_person: points_per_person,
+          creator: Meteor.user() ? Meteor.user().emails[0].address : 'Stranger'
+        });
+        Session.set("showCreateDialog",false);
+      } else {
+        Session.set("createError",
+                    "It needs a title and a description, or why bother?");
+      }
+    },
+    'click .cancel': function () {
+      Session.set("showCreateDialog", false);
+    }
+  });
+
+  /* Feed Methods */
+  Template.feed.goals = function () {
+      return Goals.find();
+  };
+  Template.feed.showCreateDialog = function () {
+    return Boolean(Session.get("showCreateDialog"));
+  };
+
+  /* Goal Methods */
+  Template.goal.events({
+    'click .doubt': function() {
+      var temp_user_id = Meteor.user()._id;
+      var doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
+      if (doubter_list.indexOf(temp_user_id) == -1) {
+        Meteor.call('doubtGoal', {
+        goal_id : this._id,
+        user_id : temp_user_id
+      });
+      } else {
+        alert("You've already doubted this!");
+      }
+    },
+    'click .success': function() {
+      var temp_user_id = Meteor.user()._id;
+      var temp_doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
+      Meteor.call('payPeople', {
+        doubter_list: temp_doubter_list,
+        points_per_person: this.points_per_person,
+        goal_owner: this.goal_owner,
+        success: true
+      });
+    },
+    'click .failure': function() {
+      var temp_user_id = Meteor.user()._id;
+      var temp_doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
+      Meteor.call('payPeople', {
+        doubter_list: temp_doubter_list,
+        points_per_person: this.points_per_person,
+        goal_owner: this.goal_owner,
+        success: false
+      });
+    }
+  });
   Template.register.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
@@ -77,7 +149,6 @@ if (Meteor.isClient) {
     Meteor.subscribe('users');
   });
 }
-
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
@@ -94,3 +165,68 @@ if (Meteor.isServer) {
     return user;
   });
 }
+
+/* Goals Model */
+Goals = new Meteor.Collection('goals');
+Doubters = new Meteor.Collection('doubters');
+Goals.allow({
+  insert: function(userId, goals) {
+    return false;
+  },
+  update: function(userId, goals, fields, modifier) {
+    return true;
+  },
+  remove: function(userId, goals) {
+    return _.all(goals, function(goal){return goal.done;});
+  }
+});
+
+Meteor.methods({
+  createGoal: function(options) {
+    var temp_goal_id = Goals.insert(
+      {
+      title: options.title,
+      description: options.description,
+      points_per_person: options.points_per_person,
+      creator: options.creator,
+      done: false,
+      goal_owner: Meteor.user()._id
+    });
+    Doubters.insert(
+      {
+      goal_id: temp_goal_id,
+      doubter_list: []
+    });
+  },
+  removeAllGoals: function() {
+    return Goals.remove({});
+  },
+  doubtGoal: function(options) {
+    var temp_goal_id = options.goal_id;
+    var new_doubter = options.user_id;
+    return Doubters.update({goal_id: temp_goal_id}, {$push: {doubter_list: new_doubter}});
+  },
+  payPeople: function(options) {
+    var to_be_paid = options.doubter_list;
+    var increment_value = parseInt(options.points_per_person);
+    var decrement_value = -1* increment_value;
+    var big_increment = increment_value * to_be_paid.length;
+    var big_decrement = decrement_value * to_be_paid.length;
+    var goal_owner = options.goal_owner;
+    var success = options.success;
+    console.log(to_be_paid, increment_value, goal_owner, success);
+    if (!success) {
+      for (var user_id in to_be_paid) {
+          Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: increment_value}});
+      }
+      Meteor.users.update({_id: goal_owner}, {$inc: {points: big_decrement}});
+    } else {
+      for (var user_id in to_be_paid) {
+          console.log(user_id);
+          Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: decrement_value}});
+      }
+      Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
+    }
+  }
+});
+

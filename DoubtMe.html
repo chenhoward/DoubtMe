@@ -5,6 +5,7 @@
 <body>
   {{> login}}
   {{> register}}
+  {{> feed}}
 </body>
 
 <template name="login">
@@ -19,6 +20,60 @@
      </div>
    </form>
   <input type="button" value="Click" />
+</template>
+
+<template name="feed">
+  {{#if showCreateDialog}}
+    {{> createDialog}}
+  {{/if}}
+  <a class="btn add_task">Add task</a>
+  {{#each goals}}
+    {{> goal}}
+  {{/each}}
+</template>
+<template name="goal">
+  <div class="goal well well-small">
+    <button type="button" class="close cancel delete">&times;</button>
+    <div class="creator muted">{{creator}}</div>
+   <h3>
+      {{title}}
+    </h3>
+    <h5>
+      Points for Doubting: {{points_per_person}}
+    </h5>
+    <p>{{description}}</p>
+    <a class="btn btn-primary doubt">Doubt This</a>
+    <a class="btn btn-primary success">!@#$ the haters</a>
+    <a class="btn btn-primary failure">):</a>
+    {{goal_doubters}}
+  </div>
+</template>
+
+<template name="createDialog">
+  <div class="modal">
+    <div class="modal-header">
+      <button type="button" class="close cancel">&times;</button>
+      <h3>Add Goal</h3>
+    </div>
+
+    <div class="modal-body">
+      {{#if error}}
+      <div class="alert alert-error">{{error}}</div>
+      {{/if}}
+
+      <label>Goal</label>
+      <input type="text" class="title span5" id="add_title">
+      <label>Points Per Doubter</label>
+      <input type="text" class="points_per_person span5" id="add_points_per">
+      <label>Description</label>
+      <textarea class="description span5" id="add_desc"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <a href="#" class="btn cancel">Cancel</a>
+      <a href="#" class="btn btn-primary save">Add Goal</a>
+    </div>
+  </div>
 </template>
 
 <template name="register">
