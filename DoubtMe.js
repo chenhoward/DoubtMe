@@ -87,12 +87,10 @@ if (Meteor.isServer) {
   });
 
   Accounts.onCreateUser(function(options, user) {
-    user.points = 0;
+    user.points = 1000;
     // We still want the default hook's 'profile' behavior.
     if (options.profile)
       user.profile = options.profile;
     return user;
   });
 }
-
-
