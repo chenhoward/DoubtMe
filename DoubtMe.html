@@ -3,14 +3,21 @@
 </head>
 
 <body>
-  {{> hello}}
-
+  {{> login}}
+  {{> register}}
   {{> feed}}
 </body>
 
-<template name="hello">
-<h1>Hello World!</h1>
+<template name="login">
   {{greeting}}
+  <h1>Login</h1>
+  <form id="login-form" action="action">
+      <div>
+        <input type="email" id="login-email" />
+        <input type="password" id="login-password" />
+        <input type="submit" id="login-button" value="Sign in" />
+     </div>
+   </form>
   <input type="button" value="Click" />
 </template>
 
@@ -58,4 +65,14 @@
       <a href="#" class="btn btn-primary save">Add Goal</a>
     </div>
   </div>
+</template>
+<template name="register">
+  <h1>Register</h1>
+    <form id="register-form" action="action">
+      <div>
+       <input type="email" id="account-email" />
+       <input type="password" id="account-password" />
+       <input type="submit" id="create-account" value="Create an Account" />
+     </div>
+   </form>
 </template>

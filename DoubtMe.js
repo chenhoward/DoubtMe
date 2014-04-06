@@ -1,16 +1,44 @@
 if (Meteor.isClient) {
   Session.set('showCreateDialog', false);
-  Template.hello.greeting = function () {
-    return "Welcome to DoubtMe.";
-  };
-  
 
   /* Events */
-  Template.hello.events({
-    'click input': function () {
-      // template data, if any, is available in 'this'
-      if (typeof console !== 'undefined')
-        console.log("You pressed the button");
+  Template.login.greeting = function () {
+    if (Meteor.user())
+      return Meteor.user().emails[0].address + " " + Meteor.user().points;
+  };
+  var isValidPassword = function(val) {
+    return (val.length >= 6) ? true : false;
+  }
+  var trimInput = function(val) {
+    return val.replace(/^\s*|\s*$/g, "");
+  }
+  Template.login.events({
+
+    'submit #login-form' : function(e, t){
+      e.preventDefault();
+      // retrieve the input field values
+      var email = t.find('#login-email').value
+        , password = t.find('#login-password').value;
+      console.log("call");
+      var email = trimInput(email);
+
+      // Trim and validate your fields here.... 
+
+      // If validation passes, supply the appropriate fields to the
+      // Meteor.loginWithPassword() function.
+      Meteor.loginWithPassword(email, password, function(err){
+        if (err) {
+          console.log("Error");
+        }
+        // The user might not have been found, or their passwword
+        // could be incorrect. Inform the user that their
+        // login attempt has failed. 
+        else {
+          console.log("Success");
+        }
+        // The user has been logged in.
+      });
+      return false; 
     }
   });
   Template.feed.events({
@@ -47,11 +75,53 @@ if (Meteor.isClient) {
   Template.feed.showCreateDialog = function () {
     return Boolean(Session.get("showCreateDialog"));
   };
+  Template.register.events({
+    'submit #register-form' : function(e, t) {
+      e.preventDefault();
+      var email = t.find('#account-email').value
+        , password = t.find('#account-password').value;
+
+      // Trim and validate the input
+        var email = trimInput(email);
+
+        if (isValidPassword(password)) {
+          Accounts.createUser({email: email, password : password}, function(err){
+            if (err) {
+              // Inform the user that account creation failed
+            } else {
+              // Success. Account has been created and the user
+              // has logged in successfully. 
+            }
+
+          });
+
+          return false;
+        } else {
+          console.log("fail");
+          return false;
+        }
+    }
+
+  });
+  Deps.autorun(function() {
+    Meteor.subscribe('users');
+  });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
+  });
+  Meteor.publish('users', function() {
+    return Meteor.users.find({}, {fields: {points: 1}});
+  });
+
+  Accounts.onCreateUser(function(options, user) {
+    user.points = 1000;
+    // We still want the default hook's 'profile' behavior.
+    if (options.profile)
+      user.profile = options.profile;
+    return user;
   });
 }
 
