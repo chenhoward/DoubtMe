@@ -1,4 +1,7 @@
 if (Meteor.isClient) {
+var isValidPassword = function(val) {
+     return (val.length >= 6) ? true : false;
+  }
 var trimInput = function(val) {
     return val.replace(/^\s*|\s*$/g, "");
   }
@@ -10,6 +13,7 @@ Template.login.events({
       var email = t.find('#login-email').value
         , password = t.find('#login-password').value;
       console.log("call");
+      var email = trimInput(email);
 
         // Trim and validate your fields here.... 
 
@@ -44,7 +48,9 @@ Template.register.events({
         , password = t.find('#account-password').value;
 
         // Trim and validate the input
+      var email = trimInput(email);
 
+      if (isValidPassword(password)) {
       Accounts.createUser({email: email, password : password}, function(err){
           if (err) {
             // Inform the user that account creation failed
@@ -56,7 +62,12 @@ Template.register.events({
         });
 
       return false;
+   } else {
+        console.log("fail");
+        return false;
     }
+   }
+    
   });
 }
 
