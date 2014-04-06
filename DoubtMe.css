@@ -1,2 +1,6 @@
 /* CSS declarations go here */
-.row {text-align: center}
+.row-fluid {text-align: center}
+div
+{
+overflow-x:hidden;
+}
