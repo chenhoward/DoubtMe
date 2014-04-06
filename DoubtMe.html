@@ -13,12 +13,17 @@
     </ul>
   </div>
       <p class="navbar-text">Logged in as</p> 
-</div>
-  {{> login}}
-  {{> register}}
+    </div>
+    {{> forms}}
   {{> feed}}
 </body>
 
+<template  name = "forms">
+  {{#if showForms}}
+  {{>login}}
+  {{>register}}
+  {{/if}}
+</template>
 <template name="login">
   {{greeting}}
   <h1>Login</h1>

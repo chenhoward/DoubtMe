@@ -97,6 +97,9 @@ if (Meteor.isClient) {
       return null;
     }
   };
+  Template.forms.showForms = function () {
+    return Boolean(!Meteor.user());
+  };
   Template.register.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
