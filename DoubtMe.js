@@ -2,15 +2,15 @@ if (Meteor.isClient) {
   Session.set("errorMessage", "");
   Template.err.errMessage = function() {
     return Session.get("errorMessage");
-  }
+  };
   Template.forms.showErrMessage = function() {
     return Boolean(Session.get("errorMessage"));
-  }
+  };
   Template.err.events({
     'click .cancel': function() {
       Session.set("errorMessage", "");
     }
-  })
+  });
   /* Events */
   Template.nav.greeting = function () {
     if (Meteor.user())
@@ -101,8 +101,12 @@ if (Meteor.isClient) {
   });
 
   Template.user.email_address = function(){
+    try {
     return Meteor.users.find({_id: this._id}).fetch()[0].emails[0].address.split("@")[0];
     //return Meteor.users.find({_id: this._id}).fetch().emails[0].address;
+    //
+    //
+    } catch(err){}
   };
   Template.feed.events({
     'click .add_goal': function() {
@@ -114,7 +118,7 @@ if (Meteor.isClient) {
     'click .logout': function() {
       console.log("logout");
       Meteor.logout();
-    },
+    }
   });
   /* Create Challenge Method */
   Template.challengeCreate.opponentEmail = function() {
@@ -144,7 +148,7 @@ if (Meteor.isClient) {
         Session.set("createError",
                     "It needs a title and a description, or why bother?");
       }
-    },
+    }
 
   });
   Template.createDialog.events({
@@ -189,26 +193,35 @@ if (Meteor.isClient) {
     return Meteor.user()._id == this.goal_owner;
   };
   Template.goal.winning = function() {
-    setTimeout(1000);
-    var two = Doubters.find({goal_id: this._id}).fetch()[0].believe2.length;
-    var one = Doubters.find({goal_id: this._id}).fetch()[0].believe1.length;
-    if (one == 0 && two == 0) return 50;
-    var percent = (((one*1.0) / (one+two))*100).toFixed(0);
-    return percent; 
+    try{
+    console.log(Doubters.find({goal_id: this._id}));
+    if (Doubters.find({goal_id: this._id}).fetch()) {
+      var two = Doubters.find({goal_id: this._id}).fetch()[0].believe2.length;
+      var one = Doubters.find({goal_id: this._id}).fetch()[0].believe1.length;
+      if (one === 0 && two === 0) return 50;
+      var percent = (((one*1.0) / (one+two))*100).toFixed(0);
+      return percent; 
+    } else {
+      return ''
+    }
+    } catch(err) {}
   };
   Template.goal.showCompPayButtons = function(){
     return (Meteor.user()._id == this.person1 || Meteor.user()._id == this.person2);
   };
   Template.goal.email_1 = function(){
-    setTimeout(1);
+    try {
     var temp = Meteor.users.find({_id: String(this.person1)}).fetch()[0];
     if (!temp) return '';
     return temp.emails[0].address.split("@")[0];
+    } catch(err){}
   };
   Template.goal.email_2 = function(){
+    try{
     var temp = Meteor.users.find({_id: this.person2}).fetch()[0];
     if (!temp) return'';
     return temp.emails[0].address.split("@")[0];
+    } catch (err){}
   };
   /* User Event */
   Template.user.events({
@@ -317,7 +330,7 @@ if (Meteor.isClient) {
       } else {
         alert("You can only vote once!");
       }
-    },
+    }
   });
 
   Template.goal.goal_doubters = function() {
@@ -351,8 +364,7 @@ if (Meteor.isClient) {
   Template.register.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
-      var email = t.find('#account-email').value
-        , password = t.find('#account-password').value;
+      var email = t.find('#account-email').value, password = t.find('#account-password').value;
 
       // Trim and validate the input
         email = trimInput(email);
@@ -372,14 +384,11 @@ if (Meteor.isClient) {
         } else {
           Session.set('errorMessage', 'Password is too short')
           return false; 
-          console.log("fail");
-          return false;
         }
     },
     'submit #register-form2' : function(e, t) {
       e.preventDefault();
-      var email = t.find('#account-email2').value
-        , password = t.find('#account-password2').value;
+      var email = t.find('#account-email2').value, password = t.find('#account-password2').value;
 
       // Trim and validate the input
         email = trimInput(email);
@@ -404,11 +413,13 @@ if (Meteor.isClient) {
           console.log("fail");
           return false;
         }
-    },
+    }
 
   });
   Deps.autorun(function() {
     Meteor.subscribe('users');
+    Meteor.subscribe('goals');
+    Meteor.subscribe('doubters');
   });
 }
 if (Meteor.isServer) {
