@@ -5,6 +5,7 @@
 div
 {
   overflow-x:hidden;
+  font-family: 'Oswald', serif;
 }
 .btn-group {
   padding-bottom:10px;
