@@ -35,10 +35,9 @@ if (Meteor.isClient) {
     'submit #login-form' : function(e, t){
       e.preventDefault();
       // retrieve the input field values
-      var email = t.find('#login-email').value
-        , password = t.find('#login-password').value;
+      var email = t.find('#login-email').value, password = t.find('#login-password').value;
       console.log("call");
-      var email = trimInput(email);
+      email = trimInput(email);
 
       // Trim and validate your fields here....
 
@@ -62,10 +61,9 @@ if (Meteor.isClient) {
     'submit #login-form2' : function(e, t){
       e.preventDefault();
       // retrieve the input field values
-      var email = t.find('#login-email2').value
-        , password = t.find('#login-password2').value;
+      var email = t.find('#login-email2').value, password = t.find('#login-password2').value;
       console.log("call");
-      var email = trimInput(email);
+      email = trimInput(email);
 
       // Trim and validate your fields here....
 
@@ -191,6 +189,7 @@ if (Meteor.isClient) {
     return Meteor.user()._id == this.goal_owner;
   };
   Template.goal.winning = function() {
+    setTimeout(1000);
     var two = Doubters.find({goal_id: this._id}).fetch()[0].believe2.length;
     var one = Doubters.find({goal_id: this._id}).fetch()[0].believe1.length;
     if (one == 0 && two == 0) return 50;
