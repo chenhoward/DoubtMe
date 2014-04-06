@@ -8,102 +8,111 @@
   {{> feed}}
 </body>
 <template name = "nav">
-  <div class="navbar">
+<div class="navbar">
   <div class="navbar-inner">
     <a class="brand" href="#">DoubtMe</a>
-    <ul class="nav">
-      <li class="active"><a href="#">Home</a></li>
-      <li><a href="#">Link</a></li>
-      <li><a href="#">Link</a></li>
+    <ul class="nav pull-right">
+      <li>
+        <a>{{greeting}}</a>
+      </li>
     </ul>
-<ul class="nav pull-right">
-            <li>
-              <a>{{greeting}}</a>
-            </li>
-          </ul>
   </div>
-    </div>
+</div>
 </template>
 <template  name = "forms">
-  {{#if showForms}}
-  {{>login}}
-  {{>register}}
-  {{/if}}
+{{#if showForms}}
+{{>login}}
+{{>register}}
+{{/if}}
 </template>
 <template name="login">
-  <h1>Login</h1>
-  <form id="login-form" action="action">
+<div class ="row">
+  <div class="span12">
+    <h1>Login</h1>
+    <form id="login-form" class="form-inline" >
       <div>
         <input type="email" id="login-email" />
         <input type="password" id="login-password" />
-        <input type="submit" id="login-button" value="Sign in" />
-     </div>
-   </form>
-  <input type="button" value="Click" />
+      </div>
+      <div class="center">
+        <button type="submit" class="btn">Sign in</button>
+      </div>
+    </form>
+  </div>
+</div>
 </template>
 
 <template name="feed">
-  {{#if showCreateDialog}}
-    {{> createDialog}}
-  {{/if}}
-  <a class="btn add_task">Add task</a>
-  <a class="btn logout">Logout</a>  
-  {{#each goals}}
-    {{> goal}}
-  {{/each}}
+{{#if showButtons}}
+{{#if showCreateDialog}}
+{{> createDialog}}
+{{/if}}
+
+<a class="btn add_task">Add task</a>
+<a class="btn logout">Logout</a>  
+{{/if}}
+{{#each goals}}
+{{> goal}}
+{{/each}}
 </template>
 <template name="goal">
-  <div class="goal well well-small">
-    <button type="button" class="close cancel delete">&times;</button>
-    <div class="creator muted">{{creator}}</div>
-   <h3>
-      {{title}}
-    </h3>
-    <h5>
-      Points for Doubting: {{points_per_person}}
-    </h5>
-    <p>{{description}}</p>
-    <a class="btn btn-primary doubt">Doubt This</a>
-    <a class="btn btn-primary success">!@#$ the haters</a>
-    <a class="btn btn-primary failure">):</a>
-    {{goal_doubters}}
-  </div>
+<div class="goal well well-small">
+  <button type="button" class="close cancel delete">&times;</button>
+  <div class="creator muted">{{creator}}</div>
+  <h3>
+    {{title}}
+  </h3>
+  <h5>
+    Points for Doubting: {{points_per_person}}
+  </h5>
+  <p>{{description}}</p>
+  <a class="btn btn-primary doubt">Doubt This</a>
+  <a class="btn btn-primary success">!@#$ the haters</a>
+  <a class="btn btn-primary failure">):</a>
+  {{goal_doubters}}
+</div>
 </template>
 
 <template name="createDialog">
-  <div class="modal">
-    <div class="modal-header">
-      <button type="button" class="close cancel">&times;</button>
-      <h3>Add Goal</h3>
-    </div>
-
-    <div class="modal-body">
-      {{#if error}}
-      <div class="alert alert-error">{{error}}</div>
-      {{/if}}
-
-      <label>Goal</label>
-      <input type="text" class="title span5" id="add_title">
-      <label>Points Per Doubter</label>
-      <input type="text" class="points_per_person span5" id="add_points_per">
-      <label>Description</label>
-      <textarea class="description span5" id="add_desc"></textarea>
-    </div>
-
-    <div class="modal-footer">
-      <a href="#" class="btn cancel">Cancel</a>
-      <a href="#" class="btn btn-primary save">Add Goal</a>
-    </div>
+<div class="modal">
+  <div class="modal-header">
+    <button type="button" class="close cancel">&times;</button>
+    <h3>Add Goal</h3>
   </div>
+
+  <div class="modal-body">
+    {{#if error}}
+    <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+
+    <label>Goal</label>
+    <input type="text" class="title span5" id="add_title">
+    <label>Points Per Doubter</label>
+    <input type="text" class="points_per_person span5" id="add_points_per">
+    <label>Description</label>
+    <textarea class="description span5" id="add_desc"></textarea>
+  </div>
+
+  <div class="modal-footer">
+    <a href="#" class="btn cancel">Cancel</a>
+    <a href="#" class="btn btn-primary save">Add Goal</a>
+  </div>
+</div>
 </template>
 
 <template name="register">
-  <h1>Register</h1>
-    <form id="register-form" action="action">
+<div class="row">
+  <div class = "span12">
+    <h1>Register</h1>
+    <form id="register-form" class="form-inline">
       <div>
-       <input type="email" id="account-email" />
-       <input type="password" id="account-password" />
-       <input type="submit" id="create-account" value="Create an Account" />
-     </div>
-   </form>
+        <input type="email" id="account-email" />
+        <input type="password" id="account-password" />
+      </div>
+      <div class="center">
+        <button type="submit" class="btn">Register</button>
+      </div>
+    </form>
+  </div>
+</div>
 </template>
