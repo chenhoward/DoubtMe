@@ -1,4 +1,7 @@
 if (Meteor.isClient) {
+var trimInput = function(val) {
+    return val.replace(/^\s*|\s*$/g, "");
+  }
 Template.login.events({
 
     'submit #login-form' : function(e, t){
