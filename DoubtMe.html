@@ -7,9 +7,9 @@
   {{> nav}}
   <div class ="row-fluid">
     <div class="span12" >
-  {{> forms}}
-  {{> feed}}
-  </div>
+      {{> forms}}
+      {{> feed}}
+    </div>
   </div>
 </body>
 <template name = "nav">
@@ -19,6 +19,11 @@
     <ul class="nav pull-right hidden-phone">
       <li>
         <a>{{greeting}}</a>
+      </li>
+    </ul>
+    <ul class="nav pull-right visible-phone">
+      <li>
+        <a>{{greeting2}}</a>
       </li>
     </ul>
   </div>
@@ -31,16 +36,16 @@
 {{/if}}
 </template>
 <template name="login">
-    <h1>Login</h1>
-    <form id="login-form" class="form-inline" >
-      <div>
-        <input type="email" id="login-email" />
-        <input type="password" id="login-password" />
-      </div>
-      <div class="center">
-        <button type="submit" class="btn">Sign in</button>
-      </div>
-    </form>
+<h1>Login</h1>
+<form id="login-form" class="form-inline" >
+  <div>
+    <input type="email" id="login-email" />
+    <input type="password" id="login-password" />
+  </div>
+  <div class="center">
+    <button type="submit" class="btn">Sign in</button>
+  </div>
+</form>
 </template>
 
 <template name="feed">
@@ -49,11 +54,11 @@
 {{> createDialog}}
 {{/if}}
 {{#if showLeaderboardModal}}
-  {{> showLeaderboard}}
+{{> showLeaderboard}}
 {{/if}}
 <a class="btn btn-primary show_leaderboard"> Show Leaderboard</a>
 <a class="btn btn-primary add_goal">Add Goal</a>
-<a class="btn  btn-primary alogout">Logout</a>
+<a class="btn  btn-primary logout">Logout</a>
 {{/if}}
 {{#each goals}}
 {{> goal}}
@@ -70,10 +75,10 @@
   </h5>
   <p>{{description}}</p>
   {{#if showPayButtons}}
-    <a class="btn btn-primary success">!@#$ the haters</a>
-    <a class="btn btn-primary failure">):</a>
+  <a class="btn btn-primary success">!@#$ the haters</a>
+  <a class="btn btn-primary failure">):</a>
   {{ else }}
-    <a class="btn btn-primary doubt">Doubt This</a>
+  <a class="btn btn-primary doubt">Doubt This</a>
   {{/if}}
   {{goal_doubters}}
 </div>
@@ -124,7 +129,7 @@
       </thead>
       <tbody>
         {{#each allUsers}}
-          {{> user}}
+        {{> user}}
         {{/each}}
       </tbody>
     </table>
@@ -134,16 +139,16 @@
 
 
 <template name="register">
-    <h1>Register</h1>
-    <form id="register-form" class="form-inline">
-      <div>
-        <input type="email" id="account-email" />
-        <input type="password" id="account-password" />
-      </div>
-      <div class="center">
-        <button type="submit" class="btn">Register</button>
-      </div>
-    </form>
+<h1>Register</h1>
+<form id="register-form" class="form-inline">
+  <div>
+    <input type="email" id="account-email" />
+    <input type="password" id="account-password" />
+  </div>
+  <div class="center">
+    <button type="submit" class="btn">Register</button>
+  </div>
+</form>
 </template>
 
 <template name="user">
