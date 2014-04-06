@@ -3,8 +3,8 @@
 </head>
 
 <body>
-{{> nav}}
-    {{> forms}}
+  {{> nav}}
+  {{> forms}}
   {{> feed}}
 </body>
 <template name = "nav">
@@ -43,13 +43,10 @@
 </template>
 
 <template name="feed">
-
-  {{greeting}}
   {{#if showCreateDialog}}
     {{> createDialog}}
   {{/if}}
-  <a class="btn add_task">Add task</a>  
-
+  <a class="btn add_task">Add task</a>
   <a class="btn logout">Logout</a>  
   {{#each goals}}
     {{> goal}}
@@ -67,6 +64,8 @@
     </h5>
     <p>{{description}}</p>
     <a class="btn btn-primary doubt">Doubt This</a>
+    <a class="btn btn-primary success">!@#$ the haters</a>
+    <a class="btn btn-primary failure">):</a>
     {{goal_doubters}}
   </div>
 </template>
