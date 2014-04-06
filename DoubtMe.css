@@ -1,4 +1,14 @@
 /* CSS declarations go here */
 .center {
   text-align: center;
+div
+{
+  overflow-x:hidden;
+}
+.btn-group {
+  padding-bottom:10px;
+}
+.navbar {
+  padding-bottom:10px;
+>>>>>>> Add button padding
 }
