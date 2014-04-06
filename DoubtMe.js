@@ -63,7 +63,7 @@ if (Meteor.isClient) {
   });
 
   Template.user.email_address = function(){
-    return Meteor.users.find({_id: this._id}).fetch()[0].emails[0].address;
+    return Meteor.users.find({_id: this._id}).fetch()[0].emails[0].address.split("@")[0];
     //return Meteor.users.find({_id: this._id}).fetch().emails[0].address;
   };
   Template.feed.events({
@@ -137,6 +137,7 @@ if (Meteor.isClient) {
     if (Meteor.user())
       return Goals.find();
   };
+
   Template.feed.showCreateDialog = function () {
     return Boolean(Session.get("showCreateDialog"));
   };
@@ -157,12 +158,12 @@ if (Meteor.isClient) {
     setTimeout(1);
     var temp = Meteor.users.find({_id: String(this.person1)}).fetch()[0];
     if (!temp) return '';
-    return temp.emails[0].address;
+    return temp.emails[0].address.split("@")[0];
   };
   Template.goal.email_2 = function(){
     var temp = Meteor.users.find({_id: this.person2}).fetch()[0];
     if (!temp) return'';
-    return temp.emails[0].address;
+    return temp.emails[0].address.split("@")[0];
   };
   /* User Event */
   Template.user.events({

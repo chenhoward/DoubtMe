@@ -12,3 +12,29 @@ div
 .navbar {
   padding-bottom:10px;
 }
+
+.feed-panel{
+  width: 90%;
+  margin: 0 auto;
+  background-color: gray;
+}
+
+.goal {
+  margin: 20px;
+}
+
+.app-container {
+  background-color: gray;
+}
+
+.believe2 {
+  margin: 5px;
+}
+
+.play2 {
+  margin: 5px;
+}
+body {
+  background-color: gray;
+}
+
