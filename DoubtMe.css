@@ -35,8 +35,8 @@ div
 .btn-primary {
     background-color: #38A1CF
 }
-.btn-group {
-  padding-bottom:10px;
+.btn {
+  margin-top:10px;
 }
 .feed-panel{
   width: 90%;
