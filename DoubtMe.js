@@ -1,10 +1,9 @@
 if (Meteor.isClient) {
-  Session.set('showCreateDialog', false);
 
   /* Events */
-  Template.login.greeting = function () {
+  Template.nav.greeting = function () {
     if (Meteor.user())
-      return Meteor.user().emails[0].address + " " + Meteor.user().points;
+      return "Logged in as " + Meteor.user().emails[0].address + "\n" + Meteor.user().points;
   };
   var isValidPassword = function(val) {
     return (val.length >= 6) ? true : false;
@@ -39,11 +38,22 @@ if (Meteor.isClient) {
         // The user has been logged in.
       });
       return false; 
+    }, 
+
+    'click input': function () {
+      // template data, if any, is available in 'this'
+      if (typeof console !== 'undefined')
+        console.log("You pressed the button");
     }
   });
   Template.feed.events({
     'click .add_task': function() {
       Session.set("showCreateDialog", true);
+    },
+
+    'click .logout': function() {
+      console.log("logout");
+      Meteor.logout();
     },
   });
   /* Create Goal Method */
@@ -72,6 +82,7 @@ if (Meteor.isClient) {
 
   /* Feed Methods */
   Template.feed.goals = function () {
+    if (Meteor.user())
       return Goals.find();
   };
   Template.feed.showCreateDialog = function () {
@@ -96,6 +107,9 @@ if (Meteor.isClient) {
     } else {
       return null;
     }
+  };
+  Template.forms.showForms = function () {
+    return Boolean(!Meteor.user());
   };
   Template.register.events({
     'submit #register-form' : function(e, t) {
