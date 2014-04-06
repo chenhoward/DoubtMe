@@ -86,7 +86,7 @@ if (Meteor.isClient) {
       return Goals.find();
   };
   Template.feed.showCreateDialog = function () {
-    return Boolean(Session.get("showCreateDialog"));
+    return Boolean(Meteor.user());
   };
 
   /* Goal Methods */

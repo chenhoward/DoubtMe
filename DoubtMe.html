@@ -26,14 +26,20 @@
 {{/if}}
 </template>
 <template name="login">
-<h1>Login</h1>
-<form id="login-form" class="form-inline" >
-  <div>
-    <input type="email" id="login-email" />
-    <input type="password" id="login-password" />
-    <button type="submit" class="btn">Sign in</button>
+<div class ="row">
+  <div class="span12">
+    <h1>Login</h1>
+    <form id="login-form" class="form-inline" >
+      <div>
+        <input type="email" id="login-email" />
+        <input type="password" id="login-password" />
+      </div>
+      <div>
+        <button type="submit" class="btn">Sign in</button>
+      </div>
+    </form>
   </div>
-</form>
+</div>
 </template>
 
 <template name="feed">
@@ -92,12 +98,18 @@
 </template>
 
 <template name="register">
-<h1>Register</h1>
-<form id="register-form" class="form-inline">
-  <div>
-    <input type="email" id="account-email" />
-    <input type="password" id="account-password" />
-    <button type="submit" class="btn">Register</button>
+<div class="row">
+  <div class = "span12">
+    <h1>Register</h1>
+    <form id="register-form" class="form-inline">
+      <div>
+        <input type="email" id="account-email" />
+        <input type="password" id="account-password" />
+      </div>
+      <div class="row">
+        <button type="submit" class="btn">Register</button>
+      </div>
+    </form>
   </div>
-</form>
+</div>
 </template>
