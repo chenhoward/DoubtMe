@@ -1,6 +1,6 @@
 if (Meteor.isClient) {
   Template.login.greeting = function () {
-  if (Meteor.user())
+    if (Meteor.user())
       return Meteor.user().emails[0].address;
   };
   var isValidPassword = function(val) {
@@ -73,11 +73,25 @@ if (Meteor.isClient) {
     }
 
   });
+  Deps.autorun(function() {
+    Meteor.subscribe('users');
+  });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
+  });
+  Meteor.publish('users', function() {
+    return Meteor.users.find({}, {fields: {points: 1}});
+  });
+
+  Accounts.onCreateUser(function(options, user) {
+    user.points = 0;
+    // We still want the default hook's 'profile' behavior.
+    if (options.profile)
+      user.profile = options.profile;
+    return user;
   });
 }
 
