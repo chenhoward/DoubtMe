@@ -3,6 +3,11 @@
 </head>
 
 <body>
+{{> nav}}
+    {{> forms}}
+  {{> feed}}
+</body>
+<template name = "nav">
   <div class="navbar">
   <div class="navbar-inner">
     <a class="brand" href="#">DoubtMe</a>
@@ -11,13 +16,14 @@
       <li><a href="#">Link</a></li>
       <li><a href="#">Link</a></li>
     </ul>
+<ul class="nav pull-right">
+            <li>
+              <a>{{greeting}}</a>
+            </li>
+          </ul>
   </div>
-      <p class="navbar-text">Logged in as</p>
     </div>
-    {{> forms}}
-  {{> feed}}
-</body>
-
+</template>
 <template  name = "forms">
   {{#if showForms}}
   {{>login}}
