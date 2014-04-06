@@ -1,5 +1,4 @@
 if (Meteor.isClient) {
-  Session.set('showCreateDialog', false);
 
   /* Events */
   Template.login.greeting = function () {
@@ -72,6 +71,7 @@ if (Meteor.isClient) {
 
   /* Feed Methods */
   Template.feed.goals = function () {
+    if (Meteor.user())
       return Goals.find();
   };
   Template.feed.showCreateDialog = function () {
