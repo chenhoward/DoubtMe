@@ -1,6 +1,5 @@
 /* CSS declarations go here */
-.row-fluid {text-align: center}
-div
-{
-overflow-x:hidden;
+.center {
+  float: none;
+  margin: 0 auto;
 }

@@ -29,12 +29,16 @@
   </div>
 </div>
 </template>
+
 <template  name = "forms">
+<div class = "center">
 {{#if showForms}}
 {{>login}}
 {{>register}}
 {{/if}}
+</div>
 </template>
+
 <template name="login">
 <h1>Login</h1>
 <form id="login-form" class="form-inline" >
@@ -49,38 +53,61 @@
 </template>
 
 <template name="feed">
-{{#if showButtons}}
-{{#if showCreateDialog}}
-{{> createDialog}}
-{{/if}}
-{{#if showLeaderboardModal}}
-{{> showLeaderboard}}
-{{/if}}
-<a class="btn btn-primary show_leaderboard"> Show Leaderboard</a>
-<a class="btn btn-primary add_goal">Add Goal</a>
-<a class="btn  btn-primary logout">Logout</a>
-{{/if}}
-{{#each goals}}
-{{> goal}}
-{{/each}}
+  {{#if showButtons}}
+    {{#if showCreateDialog}}
+      {{> createDialog}}
+    {{/if}}
+    {{#if showLeaderboardModal}}
+      {{> showLeaderboard}}
+    {{/if}}
+      <a class="btn btn-primary show_leaderboard"> Show Leaderboard</a>
+    {{#if showChallengeCreate}}
+      {{> challengeCreate}}
+    {{/if}}
+    <a class="btn btn-primary add_goal">Add Goal</a>
+    <a class="btn  btn-primary logout">Logout</a>
+  {{/if}}
+  {{#each goals}}
+    {{> goal}}
+  {{/each}}
 </template>
+
+
 <template name="goal">
 <div class="goal well well-small">
-  <div class="creator muted">{{creator}}</div>
-  <h3>
-    {{title}}
-  </h3>
-  <h5>
-    Points for Doubting: {{points_per_person}}
-  </h5>
-  <p>{{description}}</p>
-  {{#if showPayButtons}}
-  <a class="btn btn-primary success">!@#$ the haters</a>
-  <a class="btn btn-primary failure">):</a>
-  {{ else }}
-  <a class="btn btn-primary doubt">Doubt This</a>
+  {{#if competition}}
+    <h5>{{email_1}}</h5>
+    <h3> VERSUS </h3>
+    <h5>{{email_2}}</h5>
+    <br/>
+    <h3> {{title}} </h3>
+    Description: {{description}}
+    <h5> Points for Correctness: {{points_per_person}}</h5>
+    {{#if showCompPayButtons}}
+    <a class="btn btn-primary play1"> {{email_1}} Won!</a>
+    <a class="btn btn-primary play2"> {{email_2}} Won!</a>
+    {{else}}
+      <a class="btn btn-primary believe1"> Bet on {{email_1}}</a>
+      <a class="btn btn-primary believe2"> Bet on {{email_2}}</a>
+    {{/if}}
+    <h5>Believers: {{email_1}}: {{believers1}} | {{email_2}}: {{believers2}}</h5>
+  {{else}}
+    <div class="creator muted">{{creator}}</div>
+    <h3>
+      {{title}}
+    </h3>
+    <h5>
+      Points for Doubting: {{points_per_person}}
+    </h5>
+    <p>{{description}}</p>
+    {{#if showPayButtons}}
+    <a class="btn btn-primary success">!@#$ the haters</a>
+    <a class="btn btn-primary failure">):</a>
+    {{ else }}
+    <a class="btn btn-primary doubt">Doubt This</a>
+    {{/if}}
+    Haters: {{goal_doubters.length}}
   {{/if}}
-  {{goal_doubters}}
 </div>
 </template>
 
@@ -88,7 +115,7 @@
 <div class="modal">
   <div class="modal-header">
     <button type="button" class="close cancel">&times;</button>
-    <h3>Add Goal</h3>
+    <h3>add goal</h3>
   </div>
 
   <div class="modal-body">
@@ -96,22 +123,50 @@
     <div class="alert alert-error">{{error}}</div>
     {{/if}}
 
-    <label>Goal</label>
+    <label>goal</label>
     <input type="text" class="title span5" id="add_title">
-    <label>Points Per Doubter</label>
+    <label>points per doubter</label>
     <input type="text" class="points_per_person span5" id="add_points_per">
-    <label>Description</label>
+    <label>description</label>
     <textarea class="description span5" id="add_desc"></textarea>
   </div>
 
   <div class="modal-footer">
-    <a href="#" class="btn cancel">Cancel</a>
-    <a href="#" class="btn btn-primary save">Add Goal</a>
+    <a href="#" class="btn cancel">cancel</a>
+    <a href="#" class="btn btn-primary save">add goal</a>
+  </div>
+</div>
+</template>
+
+<template name="challengeCreate">
+<div class="modal highz">
+  <div class="modal-header">
+    <button type="button" class="close cancel1">&times;</button>
+    <h3>Challenging: {{opponentEmail}}</h3>
+  </div>
+
+  <div class="modal-body">
+    {{#if error}}
+    <div class="alert alert-error">{{error}}</div>
+    {{/if}}
+
+    <label>goal</label>
+    <input type="text" class="title span5" id="add_title">
+    <label>Points for each Believer</label>
+    <input type="text" class="points_per_person span5" id="add_points_per">
+    <label>description</label>
+    <textarea class="description span5" id="add_desc"></textarea>
+  </div>
+
+  <div class="modal-footer">
+    <a href="#" class="btn cancel1">Cancel</a>
+    <a href="#" class="btn btn-primary save">Request</a>
   </div>
 </div>
 </template>
 
 <template name="showLeaderboard">
+
 <div class="modal">
   <div class="modal-header">
     <button type="button" class="close cancel">&times;</button>
@@ -124,7 +179,7 @@
         <tr>
           <th>Name</th>
           <th style="width: 60px">Score</th>
-          <th style="width: 20px">Challenge</th>
+          <th style="width: 60px">Challenge</th>
         </tr>
       </thead>
       <tbody>
@@ -152,9 +207,10 @@
 </template>
 
 <template name="user">
+
 <tr>
   <td class="name">{{email_address}}</td>
   <td class="score">{{points}}</td>
-  <td class="challenge"></td>
+  <td style="text-align: center;"><a class="btn btn-primary challenge"></a></td>
 </tr>
 </template>
