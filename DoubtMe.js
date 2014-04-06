@@ -11,6 +11,9 @@ if (Meteor.isClient) {
   var trimInput = function(val) {
     return val.replace(/^\s*|\s*$/g, "");
   }
+  Template.feed.showButtons = function() {
+    return Boolean(Meteor.user());
+  }
   Template.login.events({
 
     'submit #login-form' : function(e, t){
@@ -86,7 +89,7 @@ if (Meteor.isClient) {
       return Goals.find();
   };
   Template.feed.showCreateDialog = function () {
-    return Boolean(Meteor.user());
+    return Boolean(Session.get("showCreateDialog"));
   };
 
   /* Goal Methods */
@@ -96,9 +99,9 @@ if (Meteor.isClient) {
       var doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
       if (doubter_list.indexOf(temp_user_id) == -1) {
         Meteor.call('doubtGoal', {
-        goal_id : this._id,
-        user_id : temp_user_id
-      });
+          goal_id : this._id,
+          user_id : temp_user_id
+        });
       } else {
         alert("You've already doubted this!");
       }
@@ -235,13 +238,13 @@ Meteor.methods({
     console.log(to_be_paid, increment_value, goal_owner, success);
     if (!success) {
       for (var user_id in to_be_paid) {
-          Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: increment_value}});
+        Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: increment_value}});
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_decrement}});
     } else {
       for (var user_id in to_be_paid) {
-          console.log(user_id);
-          Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: decrement_value}});
+        console.log(user_id);
+        Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: decrement_value}});
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
     }

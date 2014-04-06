@@ -43,32 +43,34 @@
 </template>
 
 <template name="feed">
-  {{#if showCreateDialog}}
-    {{> createDialog}}
+{{#if showButtons}}
+{{#if showCreateDialog}}
+{{> createDialog}}
+{{/if}}
 
-  <a class="btn add_task">Add task</a>
-  <a class="btn logout">Logout</a>  
-  {{/if}}
-  {{#each goals}}
-    {{> goal}}
-  {{/each}}
+<a class="btn add_task">Add task</a>
+<a class="btn logout">Logout</a>  
+{{/if}}
+{{#each goals}}
+{{> goal}}
+{{/each}}
 </template>
 <template name="goal">
-  <div class="goal well well-small">
-    <button type="button" class="close cancel delete">&times;</button>
-    <div class="creator muted">{{creator}}</div>
-   <h3>
-      {{title}}
-    </h3>
-    <h5>
-      Points for Doubting: {{points_per_person}}
-    </h5>
-    <p>{{description}}</p>
-    <a class="btn btn-primary doubt">Doubt This</a>
-    <a class="btn btn-primary success">!@#$ the haters</a>
-    <a class="btn btn-primary failure">):</a>
-    {{goal_doubters}}
-  </div>
+<div class="goal well well-small">
+  <button type="button" class="close cancel delete">&times;</button>
+  <div class="creator muted">{{creator}}</div>
+  <h3>
+    {{title}}
+  </h3>
+  <h5>
+    Points for Doubting: {{points_per_person}}
+  </h5>
+  <p>{{description}}</p>
+  <a class="btn btn-primary doubt">Doubt This</a>
+  <a class="btn btn-primary success">!@#$ the haters</a>
+  <a class="btn btn-primary failure">):</a>
+  {{goal_doubters}}
+</div>
 </template>
 
 <template name="createDialog">
