@@ -1,6 +1,4 @@
 /* CSS declarations go here */
-.row-fluid {text-align: center}
-div
-{
-overflow-x:hidden;
+.center {
+  text-align: center;
 }

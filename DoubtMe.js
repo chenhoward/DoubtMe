@@ -14,6 +14,7 @@ if (Meteor.isClient) {
   var trimInput = function(val) {
     return val.replace(/^\s*|\s*$/g, "");
   }
+
   Template.feed.showButtons = function() {
     return Boolean(Meteor.user());
   }
@@ -52,19 +53,19 @@ if (Meteor.isClient) {
         console.log("You pressed the button");
     }
   });
-
   Template.showLeaderboard.allUsers = function() {
     return Meteor.users.find({}, {sort: {points: -1}}).fetch();
-  }
+  };
   Template.showLeaderboard.events({
     'click .cancel': function(){
       Session.set("showLeaderboardModal", false);
     }
   });
+
   Template.user.email_address = function(){
     return Meteor.users.find({_id: this._id}).fetch()[0].emails[0].address;
     //return Meteor.users.find({_id: this._id}).fetch().emails[0].address;
-  }
+  };
   Template.feed.events({
     'click .add_goal': function() {
       Session.set("showCreateDialog", true);
@@ -77,7 +78,37 @@ if (Meteor.isClient) {
       Meteor.logout();
     },
   });
-  /* Create Goal Method */
+  /* Create Challenge Method */
+  Template.challengeCreate.opponentEmail = function() {
+    var opponent_id = Session.get("challenger_id");
+    var opponent = Meteor.users.find({_id: opponent_id});
+    return opponent.fetch()[0].emails[0].address;
+  };
+  Template.challengeCreate.events({
+    'click .cancel1': function(){
+      Session.set("showChallengeCreate", false);
+    },
+    'click .save': function(event, template){
+      var title = template.find(".title").value;
+      var description = template.find(".description").value;
+      var points_per_person = template.find(".points_per_person").value;
+      var oppo_id = Session.get("challenger_id");
+      if (title.length && description.length && points_per_person) {
+        Meteor.call('createCompetition', {
+          title: title,
+          description: description,
+          points_per_person: points_per_person,
+          person_1: Meteor.userId(),
+          person_2: oppo_id
+        });
+        Session.set("showChallengeCreate",false);
+      } else {
+        Session.set("createError",
+                    "It needs a title and a description, or why bother?");
+      }
+    },
+
+  });
   Template.createDialog.events({
     'click .save': function (event, template) {
       var title = template.find(".title").value;
@@ -112,9 +143,35 @@ if (Meteor.isClient) {
   Template.feed.showLeaderboardModal = function() {
     return Boolean(Session.get("showLeaderboardModal"));
   };
+  Template.feed.showChallengeCreate = function() {
+    return Boolean(Session.get("showChallengeCreate"));
+  };
   Template.goal.showPayButtons = function() {
     return Meteor.user()._id == this.goal_owner;
-  }
+  };
+
+  Template.goal.showCompPayButtons = function(){
+    return (Meteor.user()._id == this.person1 || Meteor.user()._id == this.person2);
+  };
+  Template.goal.email_1 = function(){
+    setTimeout(1);
+    var temp = Meteor.users.find({_id: String(this.person1)}).fetch()[0];
+    if (!temp) return '';
+    return temp.emails[0].address;
+  };
+  Template.goal.email_2 = function(){
+    var temp = Meteor.users.find({_id: this.person2}).fetch()[0];
+    if (!temp) return'';
+    return temp.emails[0].address;
+  };
+  /* User Event */
+  Template.user.events({
+    'click .challenge':function(){
+      Session.set("showChallengeCreate", true);
+      Session.set("challenger_id", this._id);
+      Session.set("showLeaderboardModal", false);
+    }
+  });
   /* Goal Methods */
   Template.goal.events({
     'click .doubt': function() {
@@ -150,14 +207,96 @@ if (Meteor.isClient) {
         success: false,
         goal_id: this._id
       });
-    }
+    },
+    'click .play1': function() {
+      var bad_doubters = Doubters.find({goal_id: this._id}).fetch()[0].believe2;
+      var good_doubters = Doubters.find({goal_id: this._id}).fetch()[0].believe1;
+      Meteor.call('payPeople', {
+        doubter_list: bad_doubters,
+        points_per_person: this.points_per_person,
+        goal_owner: this.person1,
+        success: true,
+        goal_id: this._id
+      });
+      Meteor.call('payPeople', {
+        doubter_list: good_doubters,
+        points_per_person: this.points_per_person,
+        goal_owner: this.person2,
+        success: false,
+        goal_id: this._id
+      });
+    },
+    'click .play2': function() {
+      var bad_doubters = Doubters.find({goal_id: this._id}).fetch()[0].believe1;
+      var good_doubters = Doubters.find({goal_id: this._id}).fetch()[0].believe2;
+      Meteor.call('payPeople', {
+        doubter_list: bad_doubters,
+        points_per_person: this.points_per_person,
+        goal_owner: this.person2,
+        success: true,
+        goal_id: this._id
+      });
+      Meteor.call('payPeople', {
+        doubter_list: good_doubters,
+        points_per_person: this.points_per_person,
+        goal_owner: this.person1,
+        success: false,
+        goal_id: this._id
+      });
+    },
+    'click .believe1': function(){
+      var temp_user_id = Meteor.user()._id;
+      var believe_list1 = Doubters.find({goal_id: this._id}).fetch()[0].believe1;
+      var believe_list2 = Doubters.find({goal_id: this._id}).fetch()[0].believe2;
+      var believe_list = believe_list1.concat(believe_list2);
+      if (believe_list.indexOf(temp_user_id) == -1) {
+        Meteor.call('comp_believe1', {
+          goal_id: this._id,
+          user_id: temp_user_id
+        });
+      } else {
+        alert("You can only vote once!");
+      }
+    },
+    'click .believe2': function(){
+      var temp_user_id = Meteor.user()._id;
+      var believe_list1 = Doubters.find({goal_id: this._id}).fetch()[0].believe1;
+      var believe_list2 = Doubters.find({goal_id: this._id}).fetch()[0].believe2;
+      var believe_list = believe_list1.concat(believe_list2);
+      if (believe_list.indexOf(temp_user_id) == -1) {
+        Meteor.call('comp_believe2', {
+          goal_id: this._id,
+          user_id: temp_user_id
+        });
+      } else {
+        alert("You can only vote once!");
+      }
+    },
   });
+
   Template.goal.goal_doubters = function() {
     var doubters = Doubters.find({goal_id: this._id}).fetch()[0];
     if (doubters) {
       return doubters.doubter_list;
     } else {
       return null;
+    }
+  };
+
+  Template.goal.believers1 = function() {
+    var doubters = Doubters.find({goal_id: this._id}).fetch()[0];
+    if (doubters) {
+      return doubters.believe1.length;
+    } else {
+      return 0;
+    }
+  };
+  Template.goal.believers2 = function() {
+    var doubters = Doubters.find({goal_id: this._id}).fetch()[0];
+    if (doubters) {
+      return doubters.believe2.length;
+    } else {
+      return 0;
     }
   };
   Template.forms.showForms = function () {
@@ -231,6 +370,7 @@ Meteor.methods({
   createGoal: function(options) {
     var temp_goal_id = Goals.insert(
       {
+      accepted: true,
       title: options.title,
       description: options.description,
       points_per_person: options.points_per_person,
@@ -247,13 +387,13 @@ Meteor.methods({
   createCompetition: function(options) {
     var temp_goal_id = Goals.insert(
       {
+      accepted: true,
       title: options.title,
       description: options.description,
       points_per_person: options.points_per_person,
-      creator: options.creator,
-      done: false,
       person1: options.person_1,
       person2: options.person_2,
+      competition: true
     });
     Doubters.insert(
       {
@@ -270,6 +410,17 @@ Meteor.methods({
     var new_doubter = options.user_id;
     return Doubters.update({goal_id: temp_goal_id}, {$push: {doubter_list: new_doubter}});
   },
+  comp_believe1: function(options){
+    var temp_goal_id = options.goal_id;
+    var new_believer = options.user_id;
+    return Doubters.update({goal_id: temp_goal_id}, {$push: {believe1: new_believer}});
+  },
+  comp_believe2: function(options){
+    var temp_goal_id = options.goal_id;
+    var new_believer = options.user_id;
+    return Doubters.update({goal_id: temp_goal_id}, {$push: {believe2: new_believer}});
+  },
+
   payPeople : function(options) {
     var to_be_paid = options.doubter_list;
     var temp_goal_id = options.goal_id;
@@ -291,8 +442,6 @@ Meteor.methods({
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
     }
-    Doubters.remove({goal_id: temp_goal_id});
-    Goals.remove({_id: temp_goal_id});
   }
 });
 
