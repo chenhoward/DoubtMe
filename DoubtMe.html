@@ -5,10 +5,10 @@
 <body>
   {{> login}}
   {{> register}}
+  {{> feed}}
 </body>
 
 <template name="login">
-  <h1>Hello World!</h1>
   {{greeting}}
   <h1>Login</h1>
   <form id="login-form" action="action">
@@ -21,6 +21,51 @@
   <input type="button" value="Click" />
 </template>
 
+<template name="feed">
+  {{#if showCreateDialog}}
+    {{> createDialog}}
+  {{/if}}
+  <a class="btn add_task">Add task</a>  
+  {{#each goals}}
+    {{> goal}}
+  {{/each}}
+</template>
+<template name="goal">
+<div class="goal well well-small">
+    <button type="button" class="close cancel delete">&times;</button>
+    <h3>
+      {{title}}
+    </h3>
+    <div class="creator muted">{{creator}}</div>
+    <p>{{description}}</p>
+  </div>
+</template>
+
+<template name="createDialog">
+  <div class="modal">
+    <div class="modal-header">
+      <button type="button" class="close cancel">&times;</button>
+      <h3>Add Goal</h3>
+    </div>
+
+    <div class="modal-body">
+      {{#if error}}
+      <div class="alert alert-error">{{error}}</div>
+      {{/if}}
+
+      <label>Title</label>
+      <input type="text" class="title span5" id="add_title">
+
+      <label>Description</label>
+      <textarea class="description span5" id="add_desc"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <a href="#" class="btn cancel">Cancel</a>
+      <a href="#" class="btn btn-primary save">Add Goal</a>
+    </div>
+  </div>
+</template>
 <template name="register">
   <h1>Register</h1>
     <form id="register-form" action="action">
