@@ -3,14 +3,34 @@
 </head>
 
 <body>
-  {{> login}}
-  {{> register}}
+  {{> nav}}
+  {{> forms}}
   {{> feed}}
 </body>
-
+<template name = "nav">
+  <div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="#">DoubtMe</a>
+    <ul class="nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Link</a></li>
+      <li><a href="#">Link</a></li>
+    </ul>
+<ul class="nav pull-right">
+            <li>
+              <a>{{greeting}}</a>
+            </li>
+          </ul>
+  </div>
+    </div>
+</template>
+<template  name = "forms">
+  {{#if showForms}}
+  {{>login}}
+  {{>register}}
+  {{/if}}
+</template>
 <template name="login">
-  <h1>Hello World!</h1>
-  {{greeting}}
   <h1>Login</h1>
   <form id="login-form" action="action">
       <div>
@@ -27,6 +47,7 @@
     {{> createDialog}}
   {{/if}}
   <a class="btn add_task">Add task</a>
+  <a class="btn logout">Logout</a>  
   {{#each goals}}
     {{> goal}}
   {{/each}}
