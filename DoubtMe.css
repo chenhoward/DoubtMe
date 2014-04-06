@@ -1,5 +1,4 @@
 /* CSS declarations go here */
 .center {
-  float: none;
-  margin: 0 auto;
+  text-align: center;
 }
