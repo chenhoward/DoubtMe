@@ -31,13 +31,18 @@
   {{/each}}
 </template>
 <template name="goal">
-<div class="goal well well-small">
+  <div class="goal well well-small">
     <button type="button" class="close cancel delete">&times;</button>
-    <h3>
+    <div class="creator muted">{{creator}}</div>
+   <h3>
       {{title}}
     </h3>
-    <div class="creator muted">{{creator}}</div>
+    <h5>
+      Points for Doubting: {{points_per_person}}
+    </h5>
     <p>{{description}}</p>
+    <a class="btn btn-primary doubt">Doubt This</a>
+    {{goal_doubters}}
   </div>
 </template>
 
@@ -53,9 +58,10 @@
       <div class="alert alert-error">{{error}}</div>
       {{/if}}
 
-      <label>Title</label>
+      <label>Goal</label>
       <input type="text" class="title span5" id="add_title">
-
+      <label>Points Per Doubter</label>
+      <input type="text" class="points_per_person span5" id="add_points_per">
       <label>Description</label>
       <textarea class="description span5" id="add_desc"></textarea>
     </div>
@@ -66,6 +72,7 @@
     </div>
   </div>
 </template>
+
 <template name="register">
   <h1>Register</h1>
     <form id="register-form" action="action">

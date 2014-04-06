@@ -51,11 +51,13 @@ if (Meteor.isClient) {
     'click .save': function (event, template) {
       var title = template.find(".title").value;
       var description = template.find(".description").value;
-      if (title.length && description.length) {
+      var points_per_person = template.find(".points_per_person").value;
+      if (title.length && description.length && points_per_person) {
         Meteor.call('createGoal', {
           title: title,
           description: description,
-          creator: "Wonjun"
+          points_per_person: points_per_person,
+          creator: Meteor.user() ? Meteor.user().emails[0].address : 'Stranger'
         });
         Session.set("showCreateDialog",false);
       } else {
@@ -74,6 +76,26 @@ if (Meteor.isClient) {
   };
   Template.feed.showCreateDialog = function () {
     return Boolean(Session.get("showCreateDialog"));
+  };
+
+  /* Goal Methods */
+  Template.goal.events({
+    'click .doubt': function() {
+      var temp_user_id = Meteor.user()._id;
+      var temp_goal_id = this._id;
+      Meteor.call('doubtGoal', {
+        goal_id : temp_goal_id,
+        user_id : temp_user_id
+      });
+    }
+  });
+  Template.goal.goal_doubters = function() {
+    var doubters = Doubters.find({goal_id: this._id}).fetch()[0];
+    if (doubters) {
+      return doubters.doubter_list;
+    } else {
+      return null;
+    }
   };
   Template.register.events({
     'submit #register-form' : function(e, t) {
@@ -127,7 +149,7 @@ if (Meteor.isServer) {
 
 /* Goals Model */
 Goals = new Meteor.Collection('goals');
-
+Doubters = new Meteor.Collection('doubters');
 Goals.allow({
   insert: function(userId, goals) {
     return false;
@@ -142,16 +164,27 @@ Goals.allow({
 
 Meteor.methods({
   createGoal: function(options) {
-    return Goals.insert(
+    var temp_goal_id = Goals.insert(
       {
       title: options.title,
       description: options.description,
+      points_per_person: options.points_per_person,
       creator: options.creator,
       done: false
+    });
+    Doubters.insert(
+      {
+      goal_id: temp_goal_id,
+      doubter_list: []
     });
   },
   removeAllGoals: function() {
     return Goals.remove({});
+  },
+  doubtGoal: function(options) {
+    var temp_goal_id = options.goal_id;
+    var new_doubter = options.user_id;
+    return Doubters.update({goal_id: temp_goal_id}, {$push: {doubter_list: new_doubter}});
   }
 });
 
