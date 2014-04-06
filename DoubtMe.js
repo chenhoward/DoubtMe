@@ -1,11 +1,14 @@
 if (Meteor.isClient) {
-var isValidPassword = function(val) {
-     return (val.length >= 6) ? true : false;
+  Template.login.greeting = function () {
+    return Meteor.userId();
+  };
+  var isValidPassword = function(val) {
+    return (val.length >= 6) ? true : false;
   }
-var trimInput = function(val) {
+  var trimInput = function(val) {
     return val.replace(/^\s*|\s*$/g, "");
   }
-Template.login.events({
+  Template.login.events({
 
     'submit #login-form' : function(e, t){
       e.preventDefault();
@@ -15,24 +18,24 @@ Template.login.events({
       console.log("call");
       var email = trimInput(email);
 
-        // Trim and validate your fields here.... 
+      // Trim and validate your fields here.... 
 
-        // If validation passes, supply the appropriate fields to the
-        // Meteor.loginWithPassword() function.
-        Meteor.loginWithPassword(email, password, function(err){
+      // If validation passes, supply the appropriate fields to the
+      // Meteor.loginWithPassword() function.
+      Meteor.loginWithPassword(email, password, function(err){
         if (err) {
-            console.log("Error");
+          console.log("Error");
         }
-          // The user might not have been found, or their passwword
-          // could be incorrect. Inform the user that their
-          // login attempt has failed. 
+        // The user might not have been found, or their passwword
+        // could be incorrect. Inform the user that their
+        // login attempt has failed. 
         else {
-            console.log("Success");
+          console.log("Success");
         }
-          // The user has been logged in.
+        // The user has been logged in.
       });
-         return false; 
-      }
+      return false; 
+    }
   });
   Template.login.events({
     'click input': function () {
@@ -41,33 +44,33 @@ Template.login.events({
         console.log("You pressed the button");
     }
   });
-Template.register.events({
+  Template.register.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
       var email = t.find('#account-email').value
         , password = t.find('#account-password').value;
 
-        // Trim and validate the input
-      var email = trimInput(email);
+      // Trim and validate the input
+        var email = trimInput(email);
 
-      if (isValidPassword(password)) {
-      Accounts.createUser({email: email, password : password}, function(err){
-          if (err) {
-            // Inform the user that account creation failed
-          } else {
-            // Success. Account has been created and the user
-            // has logged in successfully. 
-          }
+        if (isValidPassword(password)) {
+          Accounts.createUser({email: email, password : password}, function(err){
+            if (err) {
+              // Inform the user that account creation failed
+            } else {
+              // Success. Account has been created and the user
+              // has logged in successfully. 
+            }
 
-        });
+          });
 
-      return false;
-   } else {
-        console.log("fail");
-        return false;
+          return false;
+        } else {
+          console.log("fail");
+          return false;
+        }
     }
-   }
-    
+
   });
 }
 
