@@ -1,4 +1,16 @@
 if (Meteor.isClient) {
+  Session.set("errorMessage", "");
+  Template.err.errMessage = function() {
+    return Session.get("errorMessage");
+  }
+  Template.forms.showErrMessage = function() {
+    return Boolean(Session.get("errorMessage"));
+  }
+  Template.err.events({
+    'click .cancel': function() {
+      Session.set("errorMessage", "");
+    }
+  })
   /* Events */
   Template.nav.greeting = function () {
     if (Meteor.user())
@@ -34,6 +46,7 @@ if (Meteor.isClient) {
       // Meteor.loginWithPassword() function.
       Meteor.loginWithPassword(email, password, function(err){
         if (err) {
+          Session.set("errorMessage", "Login Failed");
           console.log("Error");
         }
         // The user might not have been found, or their passwword
@@ -325,6 +338,8 @@ if (Meteor.isClient) {
 
           return false;
         } else {
+                 Session.set('errorMessage', 'Password is too short')
+                 return false; 
           console.log("fail");
           return false;
         }

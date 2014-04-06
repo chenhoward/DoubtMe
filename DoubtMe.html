@@ -33,8 +33,20 @@
 {{#if showForms}}
 {{>login}}
 {{>register}}
+{{#if showErrMessage}}
+{{>err}}
+{{/if}}
 {{/if}}
 </div>
+</template>
+
+<template name="err">
+<div class="modal">
+  <div class="modal-header">
+    <button type="button" class="close cancel">&times;</button>
+    <h3>{{errMessage}}</h3>
+  </div>
+  </div>
 </template>
 
 <template name="login">
