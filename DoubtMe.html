@@ -105,6 +105,7 @@
       <h6>Believers: {{believers1}}</h6>
     </div>
   </div>
+  <div class ="vs-bar"><div class ="left-vs" style="width: {{winning}}%"></div></div>
   <br/>
   <div class = "row-fluid center">
     <h3> {{title}} </h3>
@@ -130,21 +131,27 @@
   </div>
   {{else}}
   <div class="row-fluid center">
-    <h2 >{{creator}}</h2>
-    <h3>
-      {{title}}
-    </h3>
-    <p>{{description}}</p>
-    <h5>
-      Points for Doubting: {{points_per_person}}
-    </h5>
-    {{#if showPayButtons}}
-    <a class="btn btn-primary success">!@#$ the haters</a>
-    <a class="btn btn-primary failure">):</a>
-    {{ else }}
-    <a class="btn btn-primary doubt">Doubt This</a>
-    {{/if}}
-    Haters: {{goal_doubters.length}}
+    <div class = "span4">
+      <h4>Haters:</h4>
+      <div class ="haters">{{goal_doubters.length}}</div>
+      <h5>
+          Points for Doubting: {{points_per_person}}
+      </h5>
+    </div>
+    <div class = "span4">
+        <h2 >{{creator}}</h2>
+        <h3>
+          {{title}}
+        </h3>
+        <p>{{description}}</p>
+
+        {{#if showPayButtons}}
+        <a class="btn btn-primary success">!@#$ the haters</a>
+        <a class="btn btn-primary failure">):</a>
+        {{ else }}
+        <a class="btn btn-primary doubt">Doubt This</a>
+        {{/if}}
+    </div>
   </div>
   {{/if}}
 </div>
