@@ -291,8 +291,8 @@ Meteor.methods({
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
     }
-  Doubters.remove({goal_id: temp_goal_id});
-  Goals.remove({_id: temp_goal_id});
+    Doubters.remove({goal_id: temp_goal_id});
+    Goals.remove({_id: temp_goal_id});
   }
 });
 
