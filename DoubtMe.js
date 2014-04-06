@@ -1,5 +1,4 @@
 if (Meteor.isClient) {
-
   /* Events */
   Template.nav.greeting = function () {
     if (Meteor.user())
@@ -24,7 +23,7 @@ if (Meteor.isClient) {
       console.log("call");
       var email = trimInput(email);
 
-      // Trim and validate your fields here.... 
+      // Trim and validate your fields here....
 
       // If validation passes, supply the appropriate fields to the
       // Meteor.loginWithPassword() function.
@@ -34,14 +33,14 @@ if (Meteor.isClient) {
         }
         // The user might not have been found, or their passwword
         // could be incorrect. Inform the user that their
-        // login attempt has failed. 
+        // login attempt has failed.
         else {
           console.log("Success");
         }
         // The user has been logged in.
       });
-      return false; 
-    }, 
+      return false;
+    },
 
     'click input': function () {
       // template data, if any, is available in 'this'
@@ -49,11 +48,26 @@ if (Meteor.isClient) {
         console.log("You pressed the button");
     }
   });
+
+  Template.showLeaderboard.allUsers = function() {
+    return Meteor.users.find({}, {sort: {points: -1}}).fetch();
+  }
+  Template.showLeaderboard.events({
+    'click .cancel': function(){
+      Session.set("showLeaderboardModal", false);
+    }
+  });
+  Template.user.email_address = function(){
+    return Meteor.users.find({_id: this._id}).fetch()[0].emails[0].address;
+    //return Meteor.users.find({_id: this._id}).fetch().emails[0].address;
+  }
   Template.feed.events({
-    'click .add_task': function() {
+    'click .add_goal': function() {
       Session.set("showCreateDialog", true);
     },
-
+    'click .show_leaderboard': function() {
+      Session.set("showLeaderboardModal", true);
+    },
     'click .logout': function() {
       console.log("logout");
       Meteor.logout();
@@ -91,7 +105,12 @@ if (Meteor.isClient) {
   Template.feed.showCreateDialog = function () {
     return Boolean(Session.get("showCreateDialog"));
   };
-
+  Template.feed.showLeaderboardModal = function() {
+    return Boolean(Session.get("showLeaderboardModal"));
+  };
+  Template.goal.showPayButtons = function() {
+    return Meteor.user()._id == this.goal_owner;
+  }
   /* Goal Methods */
   Template.goal.events({
     'click .doubt': function() {
@@ -113,7 +132,8 @@ if (Meteor.isClient) {
         doubter_list: temp_doubter_list,
         points_per_person: this.points_per_person,
         goal_owner: this.goal_owner,
-        success: true
+        success: true,
+        goal_id: this._id
       });
     },
     'click .failure': function() {
@@ -123,7 +143,8 @@ if (Meteor.isClient) {
         doubter_list: temp_doubter_list,
         points_per_person: this.points_per_person,
         goal_owner: this.goal_owner,
-        success: false
+        success: false,
+        goal_id: this._id
       });
     }
   });
@@ -145,7 +166,7 @@ if (Meteor.isClient) {
         , password = t.find('#account-password').value;
 
       // Trim and validate the input
-        var email = trimInput(email);
+        email = trimInput(email);
 
         if (isValidPassword(password)) {
           Accounts.createUser({email: email, password : password}, function(err){
@@ -153,7 +174,7 @@ if (Meteor.isClient) {
               // Inform the user that account creation failed
             } else {
               // Success. Account has been created and the user
-              // has logged in successfully. 
+              // has logged in successfully.
             }
 
           });
@@ -175,7 +196,7 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
   Meteor.publish('users', function() {
-    return Meteor.users.find({}, {fields: {points: 1}});
+    return Meteor.users.find({}, {fields: {points: 1, emails: 1}});
   });
 
   Accounts.onCreateUser(function(options, user) {
@@ -219,6 +240,24 @@ Meteor.methods({
       doubter_list: []
     });
   },
+  createCompetition: function(options) {
+    var temp_goal_id = Goals.insert(
+      {
+      title: options.title,
+      description: options.description,
+      points_per_person: options.points_per_person,
+      creator: options.creator,
+      done: false,
+      person1: options.person_1,
+      person2: options.person_2,
+    });
+    Doubters.insert(
+      {
+      goal_id: temp_goal_id,
+      believe1: [],
+      believe2: []
+    });
+  },
   removeAllGoals: function() {
     return Goals.remove({});
   },
@@ -227,8 +266,9 @@ Meteor.methods({
     var new_doubter = options.user_id;
     return Doubters.update({goal_id: temp_goal_id}, {$push: {doubter_list: new_doubter}});
   },
-  payPeople: function(options) {
+  payPeople : function(options) {
     var to_be_paid = options.doubter_list;
+    var temp_goal_id = options.goal_id;
     var increment_value = parseInt(options.points_per_person);
     var decrement_value = -1* increment_value;
     var big_increment = increment_value * to_be_paid.length;
@@ -243,11 +283,12 @@ Meteor.methods({
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_decrement}});
     } else {
       for (var user_id in to_be_paid) {
-        console.log(user_id);
         Meteor.users.update({_id: to_be_paid[user_id]}, {$inc: {points: decrement_value}});
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
     }
+  Doubters.remove({goal_id: temp_goal_id});
+  Goals.remove({_id: temp_goal_id});
   }
 });
 
