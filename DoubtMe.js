@@ -4,6 +4,10 @@ if (Meteor.isClient) {
     if (Meteor.user())
       return Meteor.user().emails[0].address + "\n" + Meteor.user().points;
   };
+  Template.nav.greeting2 = function () {
+    if (Meteor.user())
+      return Meteor.user().points;
+  };
   var isValidPassword = function(val) {
     return (val.length >= 6) ? true : false;
   }
