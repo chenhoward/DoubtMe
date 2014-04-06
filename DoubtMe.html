@@ -57,7 +57,6 @@
 </template>
 <template name="goal">
 <div class="goal well well-small">
-  <button type="button" class="close cancel delete">&times;</button>
   <div class="creator muted">{{creator}}</div>
   <h3>
     {{title}}
@@ -66,9 +65,12 @@
     Points for Doubting: {{points_per_person}}
   </h5>
   <p>{{description}}</p>
-  <a class="btn btn-primary doubt">Doubt This</a>
-  <a class="btn btn-primary success">!@#$ the haters</a>
-  <a class="btn btn-primary failure">):</a>
+  {{#if showPayButtons}}
+    <a class="btn btn-primary success">!@#$ the haters</a>
+    <a class="btn btn-primary failure">):</a>
+  {{ else }}
+    <a class="btn btn-primary doubt">Doubt This</a>
+  {{/if}}
   {{goal_doubters}}
 </div>
 </template>

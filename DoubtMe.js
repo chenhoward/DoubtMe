@@ -91,7 +91,9 @@ if (Meteor.isClient) {
   Template.feed.showCreateDialog = function () {
     return Boolean(Session.get("showCreateDialog"));
   };
-
+  Template.goal.showPayButtons = function() {
+    return Meteor.user()._id == this.goal_owner;
+  }
   /* Goal Methods */
   Template.goal.events({
     'click .doubt': function() {
@@ -108,22 +110,32 @@ if (Meteor.isClient) {
     },
     'click .success': function() {
       var temp_user_id = Meteor.user()._id;
-      var temp_doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
-      Meteor.call('payPeople', {
-        doubter_list: temp_doubter_list,
-        points_per_person: this.points_per_person,
-        goal_owner: this.goal_owner,
-        success: true
-      });
+      if (temp_user_id != this.goal_owner) {
+        alert("Nice try, but you don't own this goal.");
+      } else {
+        var temp_doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
+        Meteor.call('payPeople', {
+          doubter_list: temp_doubter_list,
+          points_per_person: this.points_per_person,
+          goal_owner: this.goal_owner,
+          success: true,
+          goal_id: this._id
+        });
+      }
     },
     'click .failure': function() {
       var temp_user_id = Meteor.user()._id;
+      if (temp_user_id != this.goal_owner) {
+        alert("Nice try, but you don't own this goal.");
+        return;
+      }
       var temp_doubter_list = Doubters.find({goal_id: this._id}).fetch()[0].doubter_list;
       Meteor.call('payPeople', {
         doubter_list: temp_doubter_list,
         points_per_person: this.points_per_person,
         goal_owner: this.goal_owner,
-        success: false
+        success: false,
+        goal_id: this._id
       });
     }
   });
@@ -229,6 +241,7 @@ Meteor.methods({
   },
   payPeople: function(options) {
     var to_be_paid = options.doubter_list;
+    var temp_goal_id = options.goal_id;
     var increment_value = parseInt(options.points_per_person);
     var decrement_value = -1* increment_value;
     var big_increment = increment_value * to_be_paid.length;
@@ -248,6 +261,8 @@ Meteor.methods({
       }
       Meteor.users.update({_id: goal_owner}, {$inc: {points: big_increment}});
     }
+  Doubters.remove({goal_id: temp_goal_id});
+  Goals.remove({_id: temp_goal_id});
   }
 });
 
